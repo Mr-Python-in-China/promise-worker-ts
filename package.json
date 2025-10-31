@@ -1,8 +1,8 @@
 {
-  "name": "promise-worker-ts",
-  "version": "0.0.1",
+  "name": "@mr.python/promise-worker-ts",
+  "version": "1.0.0",
   "description": "Type-safe Promise-based Web Worker communication with TypeScript, supporting tagged messages and transferable objects",
-  "author": "Peter Batory-Bernardin",
+  "author": "Peter Batory-Bernardin, MrPython",
   "license": "MIT",
   "type": "module",
   "main": "./dist/promise-worker-ts.umd.cjs",
@@ -31,12 +31,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/petermakeswebsites/promise-worker-ts.git"
+    "url": "git+https://github.com/Mr-Python-in-China/promise-worker-ts.git"
   },
   "bugs": {
-    "url": "https://github.com/petermakeswebsites/promise-worker-ts/issues"
+    "url": "https://github.com/Mr-Python-in-China/promise-worker-ts/issues"
   },
-  "homepage": "https://github.com/petermakeswebsites/promise-worker-ts#readme",
+  "homepage": "https://github.com/Mr-Python-in-China/promise-worker-ts#readme",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

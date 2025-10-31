@@ -135,6 +135,15 @@ Listen for untagged messages
 
 Listen for tagged messages
 
+#### Reverse direction (worker → main)
+
+- `sendToMain<T>(input: Input, transfer?: Transferable[]): Promise<Output>`
+- `sendToMain<T>(tag: string, input: Input, transfer?: Transferable[]): Promise<Output>`
+- `listenMain<T>(worker: Worker, handler: (input: Input, transfer: Transferable[]) => Output | Promise<Output>): () => void`
+- `listenMain<T>(tag: string, worker: Worker, handler: (input: Input, transfer: Transferable[]) => Output | Promise<Output>): () => void`
+
+These mirror `send`/`listen` but in the opposite direction: call from the worker, handle on the main thread, with full support for tagging and transferables.
+
 ## Advanced Usage 🔧
 
 ### Error Handling
@@ -184,7 +193,47 @@ For listening, you can pass a callback function.
 
 - [x] Write tests for transferable objects
 - [ ] Write more robust test for passing _back_ transfer objects
-- [ ] Make it so workers can initiate promises to their parent threads
+- [x] Make it so workers can initiate promises to their parent threads
+
+### Worker → Main Example
+
+1. Define the types (shared):
+
+```ts
+import type { PromiseWorkerTagged } from "promise-worker-ts";
+
+export type RevCallSquare = PromiseWorkerTagged<"rev.call.square", number, number>;
+export type RevTriggerSquare = PromiseWorkerTagged<
+  "rev.trigger.square",
+  number,
+  number
+>;
+```
+
+2. In worker:
+
+```ts
+import { listen, sendToMain } from "promise-worker-ts";
+import type { RevCallSquare, RevTriggerSquare } from "./types.shared";
+
+listen<RevTriggerSquare>("rev.trigger.square", async (n) => {
+  return await sendToMain<RevCallSquare>("rev.call.square", n);
+});
+```
+
+3. In main:
+
+```ts
+import { listenMain, send } from "promise-worker-ts";
+import type { RevCallSquare, RevTriggerSquare } from "./types.shared";
+
+const worker = new Worker("reverse.worker.ts");
+const stop = listenMain<RevCallSquare>("rev.call.square", worker, (n, transfer) => n * 2);
+
+const result = await send<RevTriggerSquare>("rev.trigger.square", worker, 5);
+// result === 10
+stop();
+```
 
 ## Contributing 🤝
 

@@ -26,3 +26,15 @@ export type TransferSendAsync = PromiseWorkerTagged<
   Uint8Array,
   number
 >;
+
+// Reverse direction (worker -> main)
+export type RevCallSquare = PromiseWorkerTagged<
+  "rev.call.square",
+  number,
+  number
+>;
+export type RevTriggerSquare = PromiseWorkerTagged<
+  "rev.trigger.square",
+  number,
+  number
+>;
